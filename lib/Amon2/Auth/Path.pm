@@ -12,7 +12,7 @@ sub init_route {
     my $router = Router::Simple->new;
     while (@paths) {
         my $path = shift @paths;
-        my $code = shfit @paths;
+        my $code = shift @paths;
         $router->connect($path, {authorize => $code});
     }
 
