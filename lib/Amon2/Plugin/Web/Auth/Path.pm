@@ -49,3 +49,48 @@ sub init {
 }
 
 1;
+__END__
+
+=pod
+
+=encoding utf-8
+
+=head1 NAME
+
+Amon2::Plugin::Web::Auth::Path
+
+=hea1 SYNOPSIS
+
+package YourApp::Web;
+use Amon2::Lite;
+
+get '/' => sub {
+    my $c = shift;
+};
+
+get '/mypage' => sub {
+    my $c = shift;
+};
+
+__PACKAGE__->load_plugins(
+    'Web::Auth' => +{
+        module => 'Twitter',
+        ...
+    },
+    'Web::Auth::Path' => sub {
+        paths => [
+            '/'          => sub { $_[1]->success },
+            qr{^/auth}   => sub { $_[1]->success },
+            qr{^/mypage} => sub {
+                my ($c, $auth,) = @_;
+                if ($c->session->get('is_login')) {
+                    $auth->success;
+                } else {
+                    $auth->failed;
+                    # redirect to Auth::Site::Twitter
+                    return $c->redirect('/auth/twitter/authenticate');
+                },
+            },
+        ],
+    },
+);
