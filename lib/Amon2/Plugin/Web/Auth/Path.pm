@@ -94,3 +94,5 @@ __PACKAGE__->load_plugins(
         ],
     },
 );
+
+1;
